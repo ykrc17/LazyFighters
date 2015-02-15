@@ -1,0 +1,33 @@
+extends layout
+
+block script
+  script(src='/socket.io/socket.io.js')
+  script(src='/js/game.js')
+
+block content
+  div.container
+    div(id='net-panel').panel.panel-default
+      div.panel-body
+        p
+          | ping: 
+          span(id='ping')
+        p
+          | 在线人数:
+          span(id='online-number')
+    div(id='game-panel').panel.panel-primary
+      div.panel-body
+        p 
+          | x: 
+          span(id='x')
+        p
+          | y: 
+          span(id='y')
+        p(id='process-table')
+          | 剩余进度: 
+          span(id='process-data')
+          | %
+    div(id = 'btn-panel')
+      button(id="btn-left") 左
+      button(id="btn-right") 右
+      button(id="btn-up") 上
+      button(id="btn-down") 下
