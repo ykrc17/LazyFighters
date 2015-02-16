@@ -29,7 +29,7 @@ $(function() {
     $('#online-number').html(data.onlineNumber)
   })
 
-  socket.on('ui', function(data) {
+  socket.on('game', function(data) {
     $('#x').html(data.position.x)
     $('#y').html(data.position.y)
     if(data.remaining) {
@@ -40,5 +40,9 @@ $(function() {
       $('#process-table').hide()
     }
     $('#block-number').html(data.blockNumber)
+  })
+
+  socket.on('log', function(msg) {
+    console.log(msg)
   })
 })

@@ -1,44 +1,43 @@
-var map = function() {
+/*
+  map
+    记录地图上的玩家
+  参数
+    xmax
+      x坐标最大值
+    ymax
+      y坐标最大值
+*/
+module.exports  = function(xmax, ymax) {
+  return new map(xmax, ymax)
+}
+var map = function(xmax, ymax) {
+  if(!xmax || !ymax) {
+    console.log("map.js : Alert - not enough parameters")
+  }
   this.data = []
+  this.xmax = xmax
+  this.ymax = ymax
 }
 
-map.prototype.getCount = function(position) {
+map.prototype.get = function(position) {
   var key = position.toString()
-  this.check(key)
-  return this.data[key].length
+  return this.data[key]
 }
 
-map.prototype.add = function(position, player) {
+map.prototype.set = function(position, player) {
   var key = position.toString()
-  this.check(key)
-  this.data[key].push(player)
-
-  console.log("map.js: player added to ", key)
-  console.log("map.js: " + key + " now has " + this.getCount(position) + " people")
-}
-
-map.prototype.remove = function(position, player) {
-  var key = position.toString()
-  this.check(key)
-  for(var i = 0; i < this.data[key].length; i++) {
-    if(this.data[key][i] === player) {
-      this.data[key].splice(i, 1)
-      break
-    }
-  }
-
-  console.log("map.js: player removed from ", position.toString())
-  console.log("map.js: " + key + " now has " + this.getCount(position) + " people")
-}
-
-map.prototype.check = function(key) {
   if(!this.data[key]) {
-    this.data[key] = []
+    this.data[key] = player
   }
 }
 
-var createMap = function() {
-  return new map()
+map.prototype.remove = function(position) {
+  var key = position.toString()
+  this.data[key] = null
 }
 
-module.exports = createMap
+map.prototype.generatePosition = function() {
+  var x = Math.floor(Math.random() * this.xmax)
+  var y = Math.floor(Math.random() * this.ymax)
+  return require('./model/position')(x, y)
+}
