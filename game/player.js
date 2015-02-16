@@ -2,9 +2,10 @@ var player = function() {
   this.position = require('./model/position')(10, 10)
   this.speed = 10
   this.next = null
+  this.moveCallback = null
 }
 
-player.prototype.nextMove = function(direction, distance) {
+player.prototype.nextMove = function(direction, distance, moveCallback) {
   switch(direction) {
     case 'left':
       this.remaining = distance
@@ -23,16 +24,18 @@ player.prototype.nextMove = function(direction, distance) {
       this.next = this.position.down()
       break
   }
+  this.moveCallback = moveCallback ? moveCallback : function(){}
 }
 
-player.prototype.finishMove = function() {
-  return this.next == null
+player.prototype.isMoving = function() {
+  return this.next != null
 }
 
 player.prototype.move = function(distance) {
-  if(!this.finishMove()) {
+  if(this.isMoving()) {
     this.remaining -= distance
     if(this.remaining <= 0) {
+      this.moveCallback(this.position, this.next)
       this.position = this.next
       this.next = null
     }

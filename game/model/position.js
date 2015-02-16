@@ -19,6 +19,10 @@ position.prototype.down = function() {
   return new position(this.x, this.y-1)
 }
 
+position.prototype.toString = function() {
+  return "x" + this.x + "y" + this.y
+}
+
 var createPosition = function(x, y) {
   return new position(x, y)
 }

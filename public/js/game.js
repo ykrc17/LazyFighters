@@ -39,5 +39,6 @@ $(function() {
     else {
       $('#process-table').hide()
     }
+    $('#block-number').html(data.blockNumber)
   })
 })

@@ -1,5 +1,6 @@
 var fps = 10
 var distance = 100
+var map = require('./game/map')()
 
 var onlineNumber = 0
 
@@ -8,6 +9,7 @@ var socketServer = function(server) {
   io.on('connection', function(socket) {
     onlineNumber++
     var player = require('./game/player')()
+    map.add(player.position, player)
     var gameOn = true
 
     // event disconnect
@@ -17,7 +19,10 @@ var socketServer = function(server) {
     })
 
     socket.on('move', function(msg) {
-      player.nextMove(msg, distance)
+      player.nextMove(msg, distance, function(position1, position2) {
+        map.remove(position1, player)
+        map.add(position2, player)
+      })
     })
 
     // send network data
@@ -46,13 +51,14 @@ var socketServer = function(server) {
         position: {
           x: player.position.x,
           y: player.position.y
-        }
+        },
+        blockNumber: map.getCount(player.position)
       }
-      if(!player.finishMove()) {
+      if(player.isMoving()) {
         data.remaining = player.remaining
         player.move(player.speed / fps)
       }
-      
+
       socket.emit('ui', data)
       if(gameOn) {
         setTimeout(function() {
