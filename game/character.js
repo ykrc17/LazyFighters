@@ -71,31 +71,44 @@ character.prototype.moveUpdate = function(shift) {
     this.next = null
     this.setStatus("idle")
     this.fn['positionChange'](this.position)
-    this.fn['log']("character " + this.id + " has moved to position : " + this.position.toString())
+    this.fn['log']("玩家 " + this.id + " 到达 " + this.position.toString())
+    this.target = null
+    this.fn['log']("目标重置")
   }
 }
 
 character.prototype.attack = function() {
-  if(!target) {
+  if(!this.target) {
     this.fn['log']("我需要一个目标")
+    return
   }
-  setStatus("attacking")
+  this.status = "attacking"
+  this.remaining = this.attr.atkCost
 }
 
 character.prototype.attackUpdate = function(offset) {
   this.remaining -= offset
   if(this.remaining <= 0) {
-
+    var victim = this.map.get(this.target)
+    if(victim) {
+      this.fn['log']("对 " + victim.id + " 造成 " + this.attr.atk + " 点伤害")
+      victim.damage(this.attr.atk)
+      this.status = 'idle'
+    }
+    else {
+      this.fn['log']("未命中")
+      this.status = 'idle'
+    }
   }
 }
 
 character.prototype.damage = function(dmg) {
   this.attr.hp -= dmg
-  log("受到 " + dmg + " 点伤害")
+  this.fn['log']("受到 " + dmg + " 点伤害")
   if(this.attr.hp <= 0) {
     setStatus('dead')
     this.attr.hp = 0
-    log("你挂了")
+    fn['log']("你挂了")
   }
 }
 

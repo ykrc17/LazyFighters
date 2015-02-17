@@ -4,7 +4,7 @@ module.exports = function() {
 
 var characterAttr = function() {
   this.atk = 10
-  this.spd = 20
+  this.spd = 30
 
   this.maxHp = 100
   this.hp = this.maxHp

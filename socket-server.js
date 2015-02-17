@@ -41,11 +41,21 @@ var socketServer = function(server) {
     })
 
     socket.on('move', function(direction) {
+      if(!direction) {
+        console.err('invalid parameter')
+      }
       player.move(direction, distance)
     })
 
     socket.on('target', function(data) {
+      if(!data) {
+        console.err('invalid parameter')
+      }
       player.setTarget(data.x, data.y)
+    })
+
+    socket.on('attack', function() {
+      player.attack()
     })
 
     // send network data
@@ -68,13 +78,7 @@ var socketServer = function(server) {
       if(!gameOn) {
         return
       }
-      data = {
-        position: {
-          x: player.position.x,
-          y: player.position.y
-        },
-        attr: player.attr
-      }
+      data = {}
       if(player.status != 'idle') {
         data.remaining = player.remaining
       }

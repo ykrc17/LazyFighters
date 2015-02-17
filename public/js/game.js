@@ -1,17 +1,12 @@
 $(function() {
   var socket = io()
+  var position = null
+
+  // move
   var moveLeft = $('#move-left')
   var moveUp = $('#move-up')
   var moveDown = $('#move-down')
   var moveRight = $('#move-right')
-  var targetLeft = $('#target-left')
-  var targetUp = $('#target-up')
-  var targetDown = $('#target-down')
-  var targetRight = $('#target-right')
-  var processTable = $('#process-table')
-
-  var position = null
-
   moveLeft.click(function() {
     socket.emit('move', 'left')
   })
@@ -28,6 +23,12 @@ $(function() {
     socket.emit('move', 'right')
   })
 
+  // target
+  var targetLeft = $('#target-left')
+  var targetUp = $('#target-up')
+  var targetDown = $('#target-down')
+  var targetRight = $('#target-right')
+  var processTable = $('#process-table')
   targetLeft.click(function() {
     if(position) {
       socket.emit('target', {x: position.x-1, y: position.y})
@@ -50,6 +51,12 @@ $(function() {
     if(position) {
       socket.emit('target', {x: position.x+1, y: position.y})
     }
+  })
+
+  // actions
+  var actionAttack = $('#action-attack')
+  actionAttack.click(function() {
+    socket.emit('attack')
   })
 
   processTable.hide()
