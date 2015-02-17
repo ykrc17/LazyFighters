@@ -1,3 +1,7 @@
+module.exports = function(x, y) {
+  return new position(x, y)
+}
+
 var position = function(x, y) {
   this.x = x
   this.y = y
@@ -23,8 +27,9 @@ position.prototype.toString = function() {
   return "x" + this.x + "y" + this.y
 }
 
-var createPosition = function(x, y) {
-  return new position(x, y)
+position.prototype.toJSON = function() {
+  return {
+    x: this.x,
+    y: this.y
+  }
 }
-
-module.exports = createPosition

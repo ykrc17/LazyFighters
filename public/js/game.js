@@ -1,25 +1,55 @@
 $(function() {
   var socket = io()
-  var buttonLeft = $('#btn-left')
-  var buttonUp = $('#btn-up')
-  var buttonDown = $('#btn-down')
-  var buttonRight = $('#btn-right')
+  var moveLeft = $('#move-left')
+  var moveUp = $('#move-up')
+  var moveDown = $('#move-down')
+  var moveRight = $('#move-right')
+  var targetLeft = $('#target-left')
+  var targetUp = $('#target-up')
+  var targetDown = $('#target-down')
+  var targetRight = $('#target-right')
   var processTable = $('#process-table')
 
-  buttonLeft.click(function() {
+  var position = null
+
+  moveLeft.click(function() {
     socket.emit('move', 'left')
   })
 
-  buttonUp.click(function() {
+  moveUp.click(function() {
     socket.emit('move', 'up')
   })
 
-  buttonDown.click(function() {
+  moveDown.click(function() {
     socket.emit('move', 'down')
   })
 
-  buttonRight.click(function() {
+  moveRight.click(function() {
     socket.emit('move', 'right')
+  })
+
+  targetLeft.click(function() {
+    if(position) {
+      socket.emit('target', {x: position.x-1, y: position.y})
+    }
+  })
+
+  targetUp.click(function() {
+    if(position) {
+      socket.emit('target', {x: position.x, y: position.y+1})
+    }
+  })
+
+  targetDown.click(function() {
+    if(position) {
+      socket.emit('target', {x: position.x, y: position.y-1})
+    }
+  })
+
+  targetRight.click(function() {
+    if(position) {
+      socket.emit('target', {x: position.x+1, y: position.y})
+    }
   })
 
   processTable.hide()
@@ -30,16 +60,26 @@ $(function() {
   })
 
   socket.on('game', function(data) {
-    $('#x').html(data.position.x)
-    $('#y').html(data.position.y)
     if(data.remaining) {
-      $('#process-table').show()
-      $('#process-data').html(data.remaining)
+      $('#move-status').show()
+      $('#move-process').html(data.remaining)
     }
     else {
-      $('#process-table').hide()
+      $('#move-status').hide()
     }
-    $('#block-number').html(data.blockNumber)
+  })
+
+  socket.on('attr', function(data) {
+    $('#hp').html(data.hp)
+    $('#max-hp').html(data.maxHp)
+    $('#atk').html(data.atk)
+    $('#spd').html(data.spd)
+  })
+
+  socket.on('position', function(data) {
+    position = data
+    $('#x').html(position.x)
+    $('#y').html(position.y)
   })
 
   socket.on('log', function(msg) {

@@ -14,7 +14,20 @@ block content
         p
           | 在线人数:
           span(id='online-number')
-    div(id='game-panel').panel.panel-primary
+    div(id='attr-panel').panel.panel-primary
+      div.panel-body
+        p
+          | hp: 
+          span(id='hp')
+          |  / 
+          span(id='max-hp')
+        p
+          | ATK: 
+          span(id='atk')
+        p
+          | SPD: 
+          span(id='spd')
+    div(id='move-panel').panel.panel-primary
       div.panel-body
         p 
           | x: 
@@ -22,12 +35,22 @@ block content
         p
           | y: 
           span(id='y')
-        p(id='process-table')
+        p(id='move-status')
           | 剩余进度: 
-          span(id='process-data')
+          span(id='move-process')
           | %
-    div(id = 'btn-panel')
-      button(id="btn-left") 左
-      button(id="btn-right") 右
-      button(id="btn-up") 上
-      button(id="btn-down") 下
+    div(id = 'move-panel')
+      | 移动:
+      button(id="move-left") 左
+      button(id="move-up") 上
+      button(id="move-down") 下
+      button(id="move-right") 右
+    div(id = 'target-panel')
+      | 选择:
+      button(id="target-left") 左      
+      button(id="target-up") 上
+      button(id="target-down") 下
+      button(id="target-right") 右
+    div(id = 'action-panel')
+      | 行动:
+      button(id='action-attack') 攻击

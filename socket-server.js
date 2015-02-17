@@ -8,19 +8,44 @@ var socketServer = function(server) {
   var io = require('socket.io')(server)
   io.on('connection', function(socket) {
     onlineNumber++
-    var player = require('./game/player')(map, function(msg) {
+    var player = require('./game/character')(map)
+    var gameOn = true
+
+    var sendAttr = function(attr) {
+      socket.emit('attr', attr)
+    }
+    sendAttr(player.attr)
+
+    var sendPosition = function(position) {
+      socket.emit('position', position.toJSON())
+    }
+    sendPosition(player.position)
+
+    // character event
+    player.on('log', function(msg) {
       socket.emit('log', msg)
     })
-    var gameOn = true
-    
-    // event disconnect
+
+    player.on('positionChange', function(position) {
+      sendPosition(position)
+    })
+
+    player.on('attrChange', function(attr) {
+      sendAttr(attr)
+    })
+
+    // client event
     socket.on('disconnect', function() {
       onlineNumber--
       gameOn = false
     })
 
     socket.on('move', function(direction) {
-      player.nextMove(direction, distance)
+      player.move(direction, distance)
+    })
+
+    socket.on('target', function(data) {
+      player.setTarget(data.x, data.y)
     })
 
     // send network data
@@ -34,9 +59,7 @@ var socketServer = function(server) {
       }
 
       socket.emit('network', data)
-      setTimeout(function() {
-        updateNetwork()
-      }, 1000)
+      setTimeout(updateNetwork, 1000)
     }
     updateNetwork()
 
@@ -49,9 +72,10 @@ var socketServer = function(server) {
         position: {
           x: player.position.x,
           y: player.position.y
-        }
+        },
+        attr: player.attr
       }
-      if(player.isMoving()) {
+      if(player.status != 'idle') {
         data.remaining = player.remaining
       }
       socket.emit('game', data)
@@ -59,12 +83,11 @@ var socketServer = function(server) {
       player.update()
 
       if(gameOn) {
-        setTimeout(function() {
-          updateGame()
-        }, 1000/fps)
+        setTimeout(updateGame, 1000/fps)
       }
     }
     updateGame()
+
   })
 }
 
