@@ -4,9 +4,11 @@ module.exports = function() {
 
 var characterAttr = function() {
   this.atk = 10
-  this.spd = 30
-
-  this.maxHp = 100
-  this.hp = this.maxHp
+  this.atkSpd = 30
   this.atkCost = 50
+
+  this.spd = 1000
+
+  this.hpMax = 100
+  this.hpRegen = 1
 }

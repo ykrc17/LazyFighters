@@ -67,9 +67,11 @@ $(function() {
   })
 
   socket.on('game', function(data) {
-    if(data.remaining) {
+    $('#hp').html(data.hp)
+
+    if(data.process) {
       $('#move-status').show()
-      $('#move-process').html(data.remaining)
+      $('#move-process').html(data.process)
     }
     else {
       $('#move-status').hide()
@@ -77,8 +79,7 @@ $(function() {
   })
 
   socket.on('attr', function(data) {
-    $('#hp').html(data.hp)
-    $('#max-hp').html(data.maxHp)
+    $('#max-hp').html(data.hpMax)
     $('#atk').html(data.atk)
     $('#spd').html(data.spd)
   })

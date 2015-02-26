@@ -78,9 +78,11 @@ var socketServer = function(server) {
       if(!gameOn) {
         return
       }
-      data = {}
-      if(player.status != 'idle') {
-        data.remaining = player.remaining
+      data = {
+        hp: Math.floor(player.hp)
+      }
+      if(player.status != 'idle' && player.status != 'dead') {
+        data.process = player.process / player.processMax * 100
       }
       socket.emit('game', data)
 
