@@ -1,56 +1,15 @@
 extends layout
 
+block title
+  title 懒货竞技场 | Lazy Fighters
+
 block script
   script(src='/socket.io/socket.io.js')
   script(src='/js/game.js')
 
 block content
   div.container
-    div(id='net-panel').panel.panel-default
-      div.panel-body
-        p
-          | ping: 
-          span(id='ping')
-        p
-          | 在线人数:
-          span(id='online-number')
-    div(id='attr-panel').panel.panel-primary
-      div.panel-body
-        p
-          | hp: 
-          span(id='hp')
-          |  / 
-          span(id='max-hp')
-        p
-          | ATK: 
-          span(id='atk')
-        p
-          | SPD: 
-          span(id='spd')
-    div(id='move-panel').panel.panel-primary
-      div.panel-body
-        p 
-          | x: 
-          span(id='x')
-        p
-          | y: 
-          span(id='y')
-        p(id='move-status')
-          | 剩余进度: 
-          span(id='move-process')
-          | %
-    div(id = 'move-panel')
-      | 移动:
-      button(id="move-left") 左
-      button(id="move-up") 上
-      button(id="move-down") 下
-      button(id="move-right") 右
-    div(id = 'target-panel')
-      | 选择:
-      button(id="target-left") 左      
-      button(id="target-up") 上
-      button(id="target-down") 下
-      button(id="target-right") 右
-    div(id = 'action-panel')
-      | 行动:
-      button(id='action-attack') 攻击
+    include ./panels/net-panel
+    include ./panels/character-panel
+    include ./panels/position-panel
+    include ./panels/action-panel
