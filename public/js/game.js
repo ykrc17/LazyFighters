@@ -70,17 +70,19 @@ $(function() {
     $('#hp').html(data.hp)
 
     if(data.process) {
-      $('#move-status').show()
-      $('#move-process').html(data.process)
+      $('#action-process').html(data.process + '%')
     }
     else {
-      $('#move-status').hide()
+      $('#action-process').html('无')
     }
   })
 
   socket.on('attr', function(data) {
-    $('#max-hp').html(data.hpMax)
+    $('#hp-max').html(data.hpMax)
+    $('#hp-regen').html(data.hpRegen)
     $('#atk').html(data.atk)
+    $('#atk-spd').html(data.atkSpd)
+    $('#atk-cost').html(data.atkCost)
     $('#spd').html(data.spd)
   })
 
