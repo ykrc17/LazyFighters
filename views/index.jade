@@ -9,8 +9,12 @@ block script
 
 block content
   div.container
-    include ./panels/net-panel
-    include ./panels/character-panel
-    include ./panels/position-panel
-    include ./panels/process-panel
-    include ./panels/action-panel
+    div.row
+      div.col-sm-3
+        include ./panels/net-panel
+        include ./panels/character-panel
+        include ./panels/position-panel
+    div.row
+      div.col-sm-12
+        include ./panels/progress-panel
+        include ./panels/action-panel

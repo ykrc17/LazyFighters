@@ -28,7 +28,7 @@ $(function() {
   var targetUp = $('#target-up')
   var targetDown = $('#target-down')
   var targetRight = $('#target-right')
-  var processTable = $('#process-table')
+  var progressTable = $('#progress-table')
   targetLeft.click(function() {
     if(position) {
       socket.emit('target', {x: position.x-1, y: position.y})
@@ -59,7 +59,7 @@ $(function() {
     socket.emit('attack')
   })
 
-  processTable.hide()
+  progressTable.hide()
 
   // socket listeners
   socket.on('network', function(data) {
@@ -70,8 +70,10 @@ $(function() {
   socket.on('update', function(data) {
     $('#hp').html(data.hp)
 
-    if(data.process) {
-      $('#action-process').html(data.process + '%')
+    if(data.progress) {
+      var width = data.progress + '%'
+      $('#progress-bar').css("width", width)
+      $('#progress-bar').html(width)
     }
   })
 
@@ -85,7 +87,6 @@ $(function() {
   })
 
   socket.on('positionChange', function(data) {
-    console.log(data)
     position = data
     $('#x').html(position.x)
     $('#y').html(position.y)
@@ -94,11 +95,12 @@ $(function() {
   socket.on('statusChange', function(data) {
     if(data.action) {
       $('#action-detail').html(data.detail)
-      $('#process-block').show()
-      $('#action-process').html('0%')
+      $('#progress-block').show()
+      $('#progress-bar').css("width", "0%")
+      $('#progress-bar').html('0%')
     }
     else {
-      $('#process-block').hide()
+      $('#progress-block').hide()
       $('#action-detail').html('无')
     }
   })

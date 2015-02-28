@@ -1,6 +1,8 @@
 var constants = require('./game/constants')
+var Map = require('./game/map')
+var Character = require("./game/character")
+var map = new Map(5, 5)
 var distance = 100
-var map = require('./game/map')(5, 5)
 
 var onlineNumber = 0
 
@@ -8,7 +10,7 @@ var socketServer = function(server) {
   var io = require('socket.io')(server)
   io.on('connection', function(socket) {
     onlineNumber++
-    var player = require('./game/character')(map)
+    var player = new Character(map)
     var gameOn = true
 
     socket.emit('attrChange', player.attr)
@@ -34,6 +36,7 @@ var socketServer = function(server) {
 
     // client event
     socket.on('disconnect', function() {
+      map.reset(player.position)
       onlineNumber--
       gameOn = false
     })
@@ -80,7 +83,7 @@ var socketServer = function(server) {
         hp: Math.floor(player.hp)
       }
       if(player.status != 'idle' && player.status != 'dead') {
-        data.process = Math.floor(player.process / player.processMax * 100)
+        data.progress = player.getProgressData()
       }
       socket.emit('update', data)
 

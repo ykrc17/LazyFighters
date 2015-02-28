@@ -1,39 +1,38 @@
-module.exports = function(x, y) {
-  return new position(x, y)
-}
 
-var position = function(x, y) {
+var Position = function(x, y) {
   this.x = x
   this.y = y
 }
 
-position.prototype.left = function(){
-  return new position(this.x-1, this.y)
+Position.prototype.left = function(){
+  return new Position(this.x-1, this.y)
 }
 
-position.prototype.right = function() {
-  return new position(this.x+1, this.y)
+Position.prototype.right = function() {
+  return new Position(this.x+1, this.y)
 }
 
-position.prototype.up = function() {
-  return new position(this.x, this.y+1)
+Position.prototype.up = function() {
+  return new Position(this.x, this.y+1)
 }
 
-position.prototype.down = function() {
-  return new position(this.x, this.y-1)
+Position.prototype.down = function() {
+  return new Position(this.x, this.y-1)
 }
 
-position.prototype.equals = function(position) {
+Position.prototype.equals = function(position) {
   return this.toString() == position.toString()
 }
 
-position.prototype.toString = function() {
+Position.prototype.toString = function() {
   return "x" + this.x + "y" + this.y
 }
 
-position.prototype.toJSON = function() {
+Position.prototype.toJSON = function() {
   return {
     x: this.x,
     y: this.y
   }
 }
+
+module.exports = Position

@@ -1,8 +1,3 @@
-module.exports = function(map) {
-  return new character(map)
-}
-
-var constants = require('./constants')
 /*
   character
     存放角色的数据
@@ -10,17 +5,22 @@ var constants = require('./constants')
     map
       角色所在地图
 */
-var character = function(map) {
+var constants = require('./constants')
+var Position = require('./model/position')
+var CharacterAttr = require("./model/characterAttr")
+
+var Character = function(map) {
   // public
   this.position = map.generatePosition()
+  map.set(this.position, this)
   this.status = "idle"
   this.moveTarget = null
   this.attackTarget = null
-  this.process = null
-  this.processMax = null
+  this.progress = null
+  this.progressMax = null
 
   // character data
-  this.attr = require('./characterAttr')()
+  this.attr = new CharacterAttr()
   this.hp = this.attr.hpMax
 
   // private
@@ -28,18 +28,18 @@ var character = function(map) {
   this.fn = []
 }
 
-character.prototype.on = function(event, callback) {
+Character.prototype.on = function(event, callback) {
   this.fn[event] = callback
 }
 
-character.prototype.call = function(event, data) {
+Character.prototype.call = function(event, data) {
   if(!this.fn[event]) {
     this.fn[event] = function(){}
   }
   this.fn[event](data)
 }
 
-character.prototype.move = function(direction, distance) {
+Character.prototype.move = function(direction, distance) {
   switch(direction) {
     case 'left':
       this.moveTarget = this.position.left()
@@ -59,20 +59,20 @@ character.prototype.move = function(direction, distance) {
     return
   }
   this.setStatus("moving")
-  this.process = 0
-  this.processMax = distance
+  this.progress = 0
+  this.progressMax = distance
 }
 
-character.prototype.moveUpdate = function() {
+Character.prototype.moveUpdate = function() {
   if(this.map.get(this.moveTarget)) {
     this.setStatus("idle")
     this.call('log', "该位置已被人占领")
     return
   }
 
-  this.process += this.attr.spd / constants.fps
-  if(this.process >= this.processMax) {
-    this.process = this.processMax
+  this.progress += this.attr.spd / constants.fps
+  if(this.progress >= this.progressMax) {
+    this.progress = this.progressMax
 
     this.map.remove(this.position)
     this.map.set(this.moveTarget, this)
@@ -87,7 +87,7 @@ character.prototype.moveUpdate = function() {
   }
 }
 
-character.prototype.attack = function() {
+Character.prototype.attack = function() {
   if(!this.attackTarget) {
     this.call('log', "我需要一个目标")
     return
@@ -95,14 +95,14 @@ character.prototype.attack = function() {
 
   // attack init
   this.setStatus("attacking")
-  this.process = 0
-  this.processMax = this.attr.atkCost
+  this.progress = 0
+  this.progressMax = this.attr.atkCost
 }
 
-character.prototype.attackUpdate = function() {
-  this.process += this.attr.atkSpd / constants.fps
-  if(this.process >= this.processMax) {
-    this.process = this.processMax
+Character.prototype.attackUpdate = function() {
+  this.progress += this.attr.atkSpd / constants.fps
+  if(this.progress >= this.progressMax) {
+    this.progress = this.progressMax
 
     var victim = this.map.get(this.attackTarget)
     if(victim) {
@@ -117,7 +117,7 @@ character.prototype.attackUpdate = function() {
   }
 }
 
-character.prototype.damage = function(dmg) {
+Character.prototype.damage = function(dmg) {
   this.hp -= dmg
   this.call('log', "受到 " + dmg + " 点伤害")
   if(this.hp <= 0) {
@@ -129,8 +129,8 @@ character.prototype.damage = function(dmg) {
   }
 }
 
-character.prototype.setTarget = function(x, y) {
-  var targetPosition = require('./model/position')(x, y)
+Character.prototype.setTarget = function(x, y) {
+  var targetPosition = new Position(x, y)
   if(!this.attackTarget || !this.attackTarget.equals(targetPosition)) {
     this.attackTarget = targetPosition
     this.call('log', "选择 " + targetPosition.toString() + " 为目标")
@@ -141,7 +141,7 @@ character.prototype.setTarget = function(x, y) {
   }
 }
 
-character.prototype.setStatus = function(status) {
+Character.prototype.setStatus = function(status) {
   if(this.status == status) {
     return
   }
@@ -150,7 +150,11 @@ character.prototype.setStatus = function(status) {
   this.call('log', "status set to `" + status + "`")
 }
 
-character.prototype.getStatusData = function() {
+Character.prototype.getProgressData = function() {
+  return Math.floor(this.progress / this.progressMax * 100)
+}
+
+Character.prototype.getStatusData = function() {
   var result = {}
   switch(this.status) {
     case 'idle':
@@ -171,7 +175,7 @@ character.prototype.getStatusData = function() {
   return result
 }
 
-character.prototype.update = function() {
+Character.prototype.update = function() {
   if(this.hp < this.attr.hpMax) {
     this.hp += this.attr.hpRegen / constants.fps
     if(this.hp > this.attr.hpMax) {
@@ -187,3 +191,5 @@ character.prototype.update = function() {
       break
   }
 }
+
+module.exports = Character

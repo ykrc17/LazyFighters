@@ -1,8 +1,4 @@
-module.exports = function() {
-  return new characterAttr()
-}
-
-var characterAttr = function() {
+var CharacterAttr = function() {
   this.atk = 10
   this.atkSpd = 30
   this.atkCost = 50
@@ -12,3 +8,5 @@ var characterAttr = function() {
   this.hpMax = 100
   this.hpRegen = 1
 }
+
+module.exports = CharacterAttr

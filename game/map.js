@@ -7,10 +7,9 @@
     ymax
       y坐标最大值
 */
-module.exports  = function(xmax, ymax) {
-  return new map(xmax, ymax)
-}
-var map = function(xmax, ymax) {
+var Position = require("./model/position")
+
+var Map = function(xmax, ymax) {
   if(!xmax || !ymax) {
     console.log("map.js : Alert - not enough parameters")
   }
@@ -19,25 +18,32 @@ var map = function(xmax, ymax) {
   this.ymax = ymax
 }
 
-map.prototype.get = function(position) {
+Map.prototype.get = function(position) {
   var key = position.toString()
   return this.data[key]
 }
 
-map.prototype.set = function(position, player) {
+Map.prototype.set = function(position, player) {
   var key = position.toString()
   if(!this.data[key]) {
     this.data[key] = player
   }
 }
 
-map.prototype.remove = function(position) {
+Map.prototype.reset = function(position) {
   var key = position.toString()
   this.data[key] = null
 }
 
-map.prototype.generatePosition = function() {
+Map.prototype.generatePosition = function() {
   var x = Math.floor(Math.random() * this.xmax)
   var y = Math.floor(Math.random() * this.ymax)
-  return require('./model/position')(x, y)
+  var result = new Position(x, y)
+  while(this.data[result.toString()]) {
+    result.x = Math.floor(Math.random() * this.xmax)
+    result.y = Math.floor(Math.random() * this.ymax)
+  }
+  return result
 }
+
+module.exports  = Map
