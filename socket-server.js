@@ -1,6 +1,6 @@
-var fps = 10
+var constants = require('./game/constants')
 var distance = 100
-var map = require('./game/map')(10, 10)
+var map = require('./game/map')(5, 5)
 
 var onlineNumber = 0
 
@@ -11,27 +11,25 @@ var socketServer = function(server) {
     var player = require('./game/character')(map)
     var gameOn = true
 
-    var sendAttr = function(attr) {
-      socket.emit('attr', attr)
-    }
-    sendAttr(player.attr)
-
-    var sendPosition = function(position) {
-      socket.emit('position', position.toJSON())
-    }
-    sendPosition(player.position)
+    socket.emit('attrChange', player.attr)
+    socket.emit('positionChange', player.position.toJSON())
+    socket.emit('statusChange', player.getStatusData())
 
     // character event
     player.on('log', function(msg) {
       socket.emit('log', msg)
     })
 
-    player.on('positionChange', function(position) {
-      sendPosition(position)
+    player.on('attrChange', function(attr) {
+      socket.emit('attrChange', attr)
     })
 
-    player.on('attrChange', function(attr) {
-      sendAttr(attr)
+    player.on('positionChange', function(position) {
+      socket.emit('positionChange', position)
+    })
+
+    player.on('statusChange', function(statusData) {
+      socket.emit('statusChange', statusData)
     })
 
     // client event
@@ -82,14 +80,14 @@ var socketServer = function(server) {
         hp: Math.floor(player.hp)
       }
       if(player.status != 'idle' && player.status != 'dead') {
-        data.process = player.process / player.processMax * 100
+        data.process = Math.floor(player.process / player.processMax * 100)
       }
-      socket.emit('game', data)
+      socket.emit('update', data)
 
       player.update()
 
       if(gameOn) {
-        setTimeout(updateGame, 1000/fps)
+        setTimeout(updateGame, 1000 / constants.fps)
       }
     }
     updateGame()

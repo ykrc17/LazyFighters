@@ -1,3 +1,3 @@
 module.exports = {
-  fps: 10
+  fps: 20
 }

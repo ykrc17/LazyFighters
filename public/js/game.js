@@ -61,23 +61,21 @@ $(function() {
 
   processTable.hide()
 
+  // socket listeners
   socket.on('network', function(data) {
     $('#ping').html(new Date().getTime() - data.sendTime)
     $('#online-number').html(data.onlineNumber)
   })
 
-  socket.on('game', function(data) {
+  socket.on('update', function(data) {
     $('#hp').html(data.hp)
 
     if(data.process) {
       $('#action-process').html(data.process + '%')
     }
-    else {
-      $('#action-process').html('无')
-    }
   })
 
-  socket.on('attr', function(data) {
+  socket.on('attrChange', function(data) {
     $('#hp-max').html(data.hpMax)
     $('#hp-regen').html(data.hpRegen)
     $('#atk').html(data.atk)
@@ -86,10 +84,23 @@ $(function() {
     $('#spd').html(data.spd)
   })
 
-  socket.on('position', function(data) {
+  socket.on('positionChange', function(data) {
+    console.log(data)
     position = data
     $('#x').html(position.x)
     $('#y').html(position.y)
+  })
+
+  socket.on('statusChange', function(data) {
+    if(data.action) {
+      $('#action-detail').html(data.detail)
+      $('#process-block').show()
+      $('#action-process').html('0%')
+    }
+    else {
+      $('#process-block').hide()
+      $('#action-detail').html('无')
+    }
   })
 
   socket.on('log', function(msg) {

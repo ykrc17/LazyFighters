@@ -23,6 +23,10 @@ position.prototype.down = function() {
   return new position(this.x, this.y-1)
 }
 
+position.prototype.equals = function(position) {
+  return this.toString() == position.toString()
+}
+
 position.prototype.toString = function() {
   return "x" + this.x + "y" + this.y
 }
