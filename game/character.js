@@ -14,8 +14,7 @@ var Character = function(map) {
   this.position = map.generatePosition()
   map.set(this.position, this)
   this.status = "idle"
-  this.moveTarget = null
-  this.attackTarget = null
+  this.targetPosition = null
   this.progress = null
   this.progressMax = null
 
@@ -39,32 +38,22 @@ Character.prototype.call = function(event, data) {
   this.fn[event](data)
 }
 
-Character.prototype.move = function(direction, distance) {
-  switch(direction) {
-    case 'left':
-      this.moveTarget = this.position.left()
-      break
-    case 'right':
-      this.moveTarget = this.position.right()
-      break
-    case 'up':
-      this.moveTarget = this.position.up()
-      break
-    case 'down':
-      this.moveTarget = this.position.down()
-      break
+Character.prototype.move = function() {
+  if(!this.targetPosition) {
+    this.call('log', "我需要一个目标")
+    return
   }
-  if(this.map.get(this.moveTarget)) {
+  if(this.map.get(this.targetPosition)) {
     this.call('log', "该位置已被人占领")
     return
   }
   this.setStatus("moving")
   this.progress = 0
-  this.progressMax = distance
+  this.progressMax = constants.distance
 }
 
 Character.prototype.moveUpdate = function() {
-  if(this.map.get(this.moveTarget)) {
+  if(this.map.get(this.targetPosition)) {
     this.setStatus("idle")
     this.call('log', "该位置已被人占领")
     return
@@ -72,23 +61,27 @@ Character.prototype.moveUpdate = function() {
 
   this.progress += this.attr.spd / constants.fps
   if(this.progress >= this.progressMax) {
-    this.progress = this.progressMax
-
-    this.map.remove(this.position)
-    this.map.set(this.moveTarget, this)
-
-    this.position = this.moveTarget
-    this.moveTarget = null
-    this.setStatus("idle")
-    this.call('positionChange', this.position.toJSON())
-    this.call('log', "玩家 " + this.id + " 到达 " + this.position.toString())
-    this.attackTarget = null
-    this.call('log', "目标重置")
+    this.moveFinish();
   }
 }
 
+Character.prototype.moveFinish = function() {
+  this.progress = this.progressMax
+
+  this.map.reset(this.position)
+  this.map.set(this.targetPosition, this)
+
+  this.position = this.targetPosition
+  this.targetPosition = null
+  this.setStatus("idle")
+  this.call('positionChange', this.position.toJSON())
+  this.call('log', "玩家 " + this.id + " 到达 " + this.position.toString())
+  this.targetPosition = null
+  this.call('log', "目标重置")
+}
+
 Character.prototype.attack = function() {
-  if(!this.attackTarget) {
+  if(!this.targetPosition) {
     this.call('log', "我需要一个目标")
     return
   }
@@ -104,7 +97,7 @@ Character.prototype.attackUpdate = function() {
   if(this.progress >= this.progressMax) {
     this.progress = this.progressMax
 
-    var victim = this.map.get(this.attackTarget)
+    var victim = this.map.get(this.targetPosition)
     if(victim) {
       this.call('log', "对 " + victim.id + " 造成 " + this.attr.atk + " 点伤害")
       victim.damage(this.attr.atk)
@@ -130,15 +123,14 @@ Character.prototype.damage = function(dmg) {
 }
 
 Character.prototype.setTarget = function(x, y) {
-  var targetPosition = new Position(x, y)
-  if(!this.attackTarget || !this.attackTarget.equals(targetPosition)) {
-    this.attackTarget = targetPosition
-    this.call('log', "选择 " + targetPosition.toString() + " 为目标")
-    if(this.status == "attacking") {
-      setStatus("idle")
-      this.call('log', "停止攻击")
-    }
+  var target = new Position(x, y)
+  if(!this.map.contains(target)) {
+    this.call("log", "目标超出边界")
+    return
   }
+
+  this.targetPosition = target
+  this.call('log', "选择 " + target.toString() + " 为目标")
 }
 
 Character.prototype.setStatus = function(status) {
@@ -162,11 +154,11 @@ Character.prototype.getStatusData = function() {
       break
     case 'moving':
       result.action = true
-      result.detail = '移动至 ' + this.moveTarget.toString()
+      result.detail = '移动至 ' + this.targetPosition.toString()
       break
     case 'attacking':
       result.action = true
-      result.detail = '攻击' + this.attackTarget.toString()
+      result.detail = '攻击' + this.targetPosition.toString()
       break
     case 'dead':
       result.action = false

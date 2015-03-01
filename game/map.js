@@ -35,6 +35,13 @@ Map.prototype.reset = function(position) {
   this.data[key] = null
 }
 
+Map.prototype.contains = function(position) {
+  if(position.x < 0 || position.y < 0 || position.x >= this.xmax || position.y >= this.ymax) {
+    return false
+  }
+  return true
+}
+
 Map.prototype.generatePosition = function() {
   var x = Math.floor(Math.random() * this.xmax)
   var y = Math.floor(Math.random() * this.ymax)

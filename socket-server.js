@@ -41,18 +41,15 @@ var socketServer = function(server) {
       gameOn = false
     })
 
-    socket.on('move', function(direction) {
-      if(!direction) {
-        console.err('invalid parameter')
-      }
-      player.move(direction, distance)
-    })
-
     socket.on('target', function(data) {
       if(!data) {
         console.err('invalid parameter')
       }
       player.setTarget(data.x, data.y)
+    })
+
+    socket.on('move', function() {
+      player.move()
     })
 
     socket.on('attack', function() {

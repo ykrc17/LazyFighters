@@ -2,27 +2,6 @@ $(function() {
   var socket = io()
   var position = null
 
-  // move
-  var moveLeft = $('#move-left')
-  var moveUp = $('#move-up')
-  var moveDown = $('#move-down')
-  var moveRight = $('#move-right')
-  moveLeft.click(function() {
-    socket.emit('move', 'left')
-  })
-
-  moveUp.click(function() {
-    socket.emit('move', 'up')
-  })
-
-  moveDown.click(function() {
-    socket.emit('move', 'down')
-  })
-
-  moveRight.click(function() {
-    socket.emit('move', 'right')
-  })
-
   // target
   var targetLeft = $('#target-left')
   var targetUp = $('#target-up')
@@ -54,6 +33,10 @@ $(function() {
   })
 
   // actions
+  var actionMove = $("#action-move")
+  actionMove.click(function() {
+    socket.emit("move")
+  })
   var actionAttack = $('#action-attack')
   actionAttack.click(function() {
     socket.emit('attack')
