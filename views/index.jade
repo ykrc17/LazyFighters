@@ -10,11 +10,11 @@ block script
 block content
   div.container
     div.row
-      div.col-sm-3
+      div.col-sm-6
         include ./panels/net-panel
         include ./panels/character-panel
         include ./panels/position-panel
-    div.row
-      div.col-sm-12
-        include ./panels/progress-panel
         include ./panels/action-panel
+        include ./panels/progress-panel
+      div.col-sm-6
+        include ./panels/map-panel

@@ -12,3 +12,9 @@ a {
   overflow: auto;
   padding: 15px
 }
+
+.btn-action {
+  width: 20%;
+  padding-top: 20%;
+  padding-bottom: 0
+}
