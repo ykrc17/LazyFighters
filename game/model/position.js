@@ -21,6 +21,9 @@ Position.prototype.down = function() {
 }
 
 Position.prototype.equals = function(position) {
+  if(!position) {
+    return false
+  }
   return this.toString() == position.toString()
 }
 

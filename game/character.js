@@ -10,6 +10,10 @@ var Position = require('./model/position')
 var CharacterAttr = require("./model/characterAttr")
 
 var Character = function(map) {
+  // private
+  this.map = map
+  this.fn = []
+
   // public
   this.position = map.generatePosition()
   map.set(this.position, this)
@@ -21,10 +25,6 @@ var Character = function(map) {
   // character data
   this.attr = new CharacterAttr()
   this.hp = this.attr.hpMax
-
-  // private
-  this.map = map
-  this.fn = []
 }
 
 Character.prototype.on = function(event, callback) {
@@ -69,9 +69,9 @@ Character.prototype.moveFinish = function() {
   this.progress = this.progressMax
 
   this.map.reset(this.position)
+  this.position = this.targetPosition
   this.map.set(this.targetPosition, this)
 
-  this.position = this.targetPosition
   this.targetPosition = null
   this.setStatus("idle")
   this.call('positionChange', this.position.toJSON())
@@ -165,6 +165,14 @@ Character.prototype.getStatusData = function() {
       break
   }
   return result
+}
+
+Character.prototype.getMapData = function() {
+  return this.map.getMapData(this.position, constants.sight, this.targetPosition)
+}
+
+Character.prototype.updateMap = function() {
+  this.call("mapChange", this.getMapData())
 }
 
 Character.prototype.update = function() {

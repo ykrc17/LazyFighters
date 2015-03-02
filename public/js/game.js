@@ -77,6 +77,29 @@ $(function() {
     $('#spd').html(data.spd)
   })
 
+  socket.on("mapChange", function(data) {
+    for(var i=0; i<25; i++) {
+      var key = "a"+(i%5-2)+"b"+(Math.floor(i/5)-2)
+      switch(data[i]) {
+        case "invalid":
+          $("#"+key).attr("class", "btn btn-action")
+          break
+        case "default":
+          $("#"+key).attr("class", "btn btn-default btn-action")
+          break
+        case "target":
+          $("#"+key).attr("class", "btn btn-warning btn-action")
+          break
+        case "enemy":
+          $("#"+key).attr("class", "btn btn-danger btn-action")
+          break
+        case "player":
+          $("#"+key).attr("class", "btn btn-success btn-action")
+          break
+      }
+    }
+  })
+
   socket.on('positionChange', function(data) {
     position = data
     $('#x').html(position.x)

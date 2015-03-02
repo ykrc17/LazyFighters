@@ -16,6 +16,7 @@ var socketServer = function(server) {
     socket.emit('attrChange', player.attr)
     socket.emit('positionChange', player.position.toJSON())
     socket.emit('statusChange', player.getStatusData())
+    socket.emit("mapChange", player.getMapData())
 
     // character event
     player.on('log', function(msg) {
@@ -32,6 +33,10 @@ var socketServer = function(server) {
 
     player.on('statusChange', function(statusData) {
       socket.emit('statusChange', statusData)
+    })
+
+    player.on("mapChange", function(mapData) {
+      socket.emit("mapChange", mapData)
     })
 
     // client event
