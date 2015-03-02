@@ -49,8 +49,16 @@ $(function() {
   actionAttack.click(function() {
     socket.emit('attack')
   })
-
-  progressTable.hide()
+  $(document).keydown(function(event) {
+    switch(event.which) {
+      case 81:
+        actionMove.click()
+        break
+      case 87:
+        actionAttack.click()
+        break
+    }
+  })
 
   // socket listeners
   socket.on('network', function(data) {
@@ -88,7 +96,7 @@ $(function() {
           $("#"+key).attr("class", "btn btn-default btn-action")
           break
         case "target":
-          $("#"+key).attr("class", "btn btn-warning btn-action")
+          $("#"+key).attr("class", "btn btn-info btn-action")
           break
         case "enemy":
           $("#"+key).attr("class", "btn btn-danger btn-action")

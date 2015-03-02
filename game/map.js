@@ -7,7 +7,7 @@
     ymax
       y坐标最大值
 */
-var Position = require("./model/position")
+var Position = require("./models/position")
 var constants = require("./constants")
 
 var Map = function(xmax, ymax) {

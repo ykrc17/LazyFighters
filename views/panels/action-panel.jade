@@ -1,12 +1,9 @@
 div(id = 'action-panel').panel.panel-primary
   div.panel-body
-    div.col-sm-4
-      | 选择:
-      button(id="target-left") 左      
-      button(id="target-up") 上
-      button(id="target-down") 下
-      button(id="target-right") 右
-    div.col-sm-4
-      | 行动:
-      button(id="action-move") 移动
-      button(id='action-attack') 攻击
+    div.col-sm-2
+      button(id="action-move").btn.btn-block.btn-primary 移动
+      p.btn.btn-block.btn-default.disabled Q
+    div.col-sm-2
+      button(id='action-attack').btn.btn-block.btn-primary 攻击
+      p.btn.btn-block.btn-default.disabled W
+      

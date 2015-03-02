@@ -6,8 +6,8 @@
       角色所在地图
 */
 var constants = require('./constants')
-var Position = require('./model/position')
-var CharacterAttr = require("./model/characterAttr")
+var Position = require('./models/position')
+var CharacterAttr = require("./models/characterAttr")
 
 var Character = function(map) {
   // private
@@ -131,6 +131,7 @@ Character.prototype.setTarget = function(x, y) {
 
   this.targetPosition = target
   this.call('log', "选择 " + target.toString() + " 为目标")
+  this.updateMap()
 }
 
 Character.prototype.setStatus = function(status) {
