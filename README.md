@@ -13,6 +13,7 @@
 - 一个浏览器
 
 执行以下步骤：  
-0. 在根目录下运行`npm install`
-0. 在根目录下运行`node index.js`
-0. 玩儿
+- 在根目录下运行`npm install`
+- 在根目录下运行`node index.js`
+- 浏览器中输入`localhost:8080`
+- 玩儿
