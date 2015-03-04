@@ -19,8 +19,7 @@ var Character = function(map) {
   map.set(this.position, this)
   this.status = "idle"
   this.targetPosition = null
-  this.progress = null
-  this.progressMax = null
+  this.action = null
 
   // character data
   this.attr = new CharacterAttr()
@@ -31,7 +30,7 @@ Character.prototype.on = function(event, callback) {
   this.fn[event] = callback
 }
 
-Character.prototype.call = function(event, data) {
+Character.prototype.emit = function(event, data) {
   if(!this.fn[event]) {
     this.fn[event] = function(){}
   }
@@ -39,98 +38,39 @@ Character.prototype.call = function(event, data) {
 }
 
 Character.prototype.move = function() {
-  if(!this.targetPosition) {
-    this.call('log', "我需要一个目标")
-    return
-  }
-  if(this.map.get(this.targetPosition)) {
-    this.call('log', "该位置已被人占领")
-    return
-  }
-  this.setStatus("moving")
-  this.progress = 0
-  this.progressMax = constants.distance
-}
-
-Character.prototype.moveUpdate = function() {
-  if(this.map.get(this.targetPosition)) {
-    this.setStatus("idle")
-    this.call('log', "该位置已被人占领")
-    return
-  }
-
-  this.progress += this.attr.spd / constants.fps
-  if(this.progress >= this.progressMax) {
-    this.moveFinish();
-  }
-}
-
-Character.prototype.moveFinish = function() {
-  this.progress = this.progressMax
-
-  this.map.reset(this.position)
-  this.position = this.targetPosition
-  this.map.set(this.targetPosition, this)
-
-  this.targetPosition = null
-  this.setStatus("idle")
-  this.call('positionChange', this.position.toJSON())
-  this.call('log', "玩家 " + this.id + " 到达 " + this.position.toString())
-  this.targetPosition = null
-  this.call('log', "目标重置")
+  var Move = require("./actions/move")
+  this.action = new Move(this, constants.distance)
+  this.action.start()
 }
 
 Character.prototype.attack = function() {
-  if(!this.targetPosition) {
-    this.call('log', "我需要一个目标")
-    return
-  }
-
-  // attack init
-  this.setStatus("attacking")
-  this.progress = 0
-  this.progressMax = this.attr.atkCost
-}
-
-Character.prototype.attackUpdate = function() {
-  this.progress += this.attr.atkSpd / constants.fps
-  if(this.progress >= this.progressMax) {
-    this.progress = this.progressMax
-
-    var victim = this.map.get(this.targetPosition)
-    if(victim) {
-      this.call('log', "对 " + victim.id + " 造成 " + this.attr.atk + " 点伤害")
-      victim.damage(this.attr.atk)
-      this.setStatus('idle')
-    }
-    else {
-      this.call('log', "未命中")
-      this.setStatus('idle')
-    }
-  }
+  var Attack = require("./actions/attack")
+  this.action = new Attack(this, this.attr.atkCost)
+  this.action.start()
 }
 
 Character.prototype.damage = function(dmg) {
   this.hp -= dmg
-  this.call('log', "受到 " + dmg + " 点伤害")
+  this.emit('log', "受到 " + dmg + " 点伤害")
   if(this.hp <= 0) {
     this.hp = 0
   }
   if(this.hp == 0) {
     this.setStatus('dead')
-    this.call('log', "你挂了")
+    this.emit('log', "你挂了")
   }
 }
 
 Character.prototype.setTarget = function(x, y) {
   var target = new Position(x, y)
   if(!this.map.contains(target)) {
-    this.call("log", "目标超出边界")
+    this.emit("log", "目标超出边界")
+    this.targetPosition = null
     return
   }
 
   this.targetPosition = target
-  this.call('log', "选择 " + target.toString() + " 为目标")
+  this.emit('log', "选择 " + target.toString() + " 为目标")
   this.updateMap()
 }
 
@@ -139,31 +79,23 @@ Character.prototype.setStatus = function(status) {
     return
   }
   this.status = status
-  this.call('statusChange', this.getStatusData())
-  this.call('log', "status set to `" + status + "`")
+  this.emit('statusChange', this.getStatusData())
+  this.emit('log', "status set to `" + status + "`")
 }
 
 Character.prototype.getProgressData = function() {
-  return Math.floor(this.progress / this.progressMax * 100)
+  if(this.status == "action") {
+    return Math.floor(this.action.progress / this.action.progressMax * 100)
+  }
+  else {
+    return null
+  }
 }
 
 Character.prototype.getStatusData = function() {
-  var result = {}
-  switch(this.status) {
-    case 'idle':
-      result.action = false
-      break
-    case 'moving':
-      result.action = true
-      result.detail = '移动至 ' + this.targetPosition.toString()
-      break
-    case 'attacking':
-      result.action = true
-      result.detail = '攻击' + this.targetPosition.toString()
-      break
-    case 'dead':
-      result.action = false
-      break
+  var result = {status: this.status}
+  if(this.status == "action") {
+    result.detail = this.action.name + " " + this.targetPosition ? this.targetPosition.toString() : ""
   }
   return result
 }
@@ -173,7 +105,7 @@ Character.prototype.getMapData = function() {
 }
 
 Character.prototype.updateMap = function() {
-  this.call("mapChange", this.getMapData())
+  this.emit("mapChange", this.getMapData())
 }
 
 Character.prototype.update = function() {
@@ -184,11 +116,8 @@ Character.prototype.update = function() {
     }
   }
   switch(this.status) {
-    case "moving":
-      this.moveUpdate()
-      break
-    case "attacking":
-      this.attackUpdate()
+    case "action":
+      this.action.update()
       break
   }
 }

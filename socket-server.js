@@ -53,12 +53,15 @@ var socketServer = function(server) {
       player.setTarget(data.x, data.y)
     })
 
-    socket.on('move', function() {
-      player.move()
-    })
-
-    socket.on('attack', function() {
-      player.attack()
+    socket.on('action', function(data) {
+      switch(data) {
+        case "move":
+          player.move()
+          break
+        case "attack":
+          player.attack()
+          break
+      }
     })
 
     // send network data
@@ -84,7 +87,7 @@ var socketServer = function(server) {
       data = {
         hp: Math.floor(player.hp)
       }
-      if(player.status != 'idle' && player.status != 'dead') {
+      if(player.status == "action") {
         data.progress = player.getProgressData()
       }
       socket.emit('update', data)

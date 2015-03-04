@@ -15,11 +15,11 @@ $(function() {
   // actions
   var actionMove = $("#action-move")
   actionMove.click(function() {
-    socket.emit("move")
+    socket.emit("action", "move")
   })
   var actionAttack = $('#action-attack')
   actionAttack.click(function() {
-    socket.emit('attack')
+    socket.emit("action", "attack")
   })
   $(document).keydown(function(event) {
     switch(getKeyName(event.which)) {
@@ -42,7 +42,7 @@ $(function() {
     $('#hp').html(data.hp)
 
     if(data.progress) {
-      var width = data.progress + '%'
+      var width = data.progress + "%"
       $('#progress-bar').css("width", width)
       $('#progress-bar').html(width)
     }
@@ -87,7 +87,7 @@ $(function() {
   })
 
   socket.on('statusChange', function(data) {
-    if(data.action) {
+    if(data.status == "action") {
       $('#action-detail').html(data.detail)
       $('#progress-block').show()
       $('#progress-bar').css("width", "0%")
