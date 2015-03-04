@@ -11,34 +11,6 @@ $(function() {
       })
     }
   }
-  var targetLeft = $('#target-left')
-  var targetUp = $('#target-up')
-  var targetDown = $('#target-down')
-  var targetRight = $('#target-right')
-  var progressTable = $('#progress-table')
-  targetLeft.click(function() {
-    if(position) {
-      socket.emit('target', {x: position.x-1, y: position.y})
-    }
-  })
-
-  targetUp.click(function() {
-    if(position) {
-      socket.emit('target', {x: position.x, y: position.y+1})
-    }
-  })
-
-  targetDown.click(function() {
-    if(position) {
-      socket.emit('target', {x: position.x, y: position.y-1})
-    }
-  })
-
-  targetRight.click(function() {
-    if(position) {
-      socket.emit('target', {x: position.x+1, y: position.y})
-    }
-  })
 
   // actions
   var actionMove = $("#action-move")
@@ -50,12 +22,12 @@ $(function() {
     socket.emit('attack')
   })
   $(document).keydown(function(event) {
-    switch(event.which) {
-      case 81:
-        actionMove.click()
-        break
-      case 87:
+    switch(getKeyName(event.which)) {
+      case "A":
         actionAttack.click()
+        break
+      case "S":
+        actionMove.click()
         break
     }
   })
