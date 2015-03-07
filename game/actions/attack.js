@@ -1,15 +1,16 @@
 var constants = require("../constants")
-var Action = require("./action")
-var Attack = function(character, progressMax) {
-  Action.call(this, character, progressMax)
+var ActionTargeted = require("./action-targeted")
+
+var Attack = function(character, progressMax, targetPosition) {
+  ActionTargeted.call(this, character, progressMax, targetPosition)
   this.name = "攻击"
 }
 
-Attack.prototype = new Action()
+Attack.prototype = new ActionTargeted()
 Attack.prototype.constructor = Attack
 
 Attack.prototype.start = function() {
-  if(!this.character.targetPosition) {
+  if(!this.targetPosition) {
     this.character.emit('log', "我需要一个目标")
     return
   }
@@ -27,10 +28,10 @@ Attack.prototype.update = function() {
 Attack.prototype.finish = function() {
   this.progress = this.progressMax
 
-  var victim = this.character.map.get(this.character.targetPosition)
+  var victim = this.character.map.get(this.targetPosition)
   if(victim) {
-    this.character.emit('log', "对 " + victim.id + " 造成 " + this.character.attr.atk + " 点伤害")
-    victim.damage(this.character.attr.atk)
+    victim.damage(this.character, this.character.attr.atk)
+    this.character.emit("log", "`你` 对 `" + victim.name + "` 造成 " + this.character.attr.atk + " 点伤害")
     this.character.setStatus('idle')
   }
   else {

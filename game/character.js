@@ -39,19 +39,19 @@ Character.prototype.emit = function(event, data) {
 
 Character.prototype.move = function() {
   var Move = require("./actions/move")
-  this.action = new Move(this, constants.distance)
+  this.action = new Move(this, constants.distance, this.targetPosition)
   this.action.start()
 }
 
 Character.prototype.attack = function() {
   var Attack = require("./actions/attack")
-  this.action = new Attack(this, this.attr.atkCost)
+  this.action = new Attack(this, this.attr.atkCost, this.targetPosition)
   this.action.start()
 }
 
-Character.prototype.damage = function(dmg) {
+Character.prototype.damage = function(character, dmg) {
   this.hp -= dmg
-  this.emit('log', "受到 " + dmg + " 点伤害")
+  this.emit('log', "受到来自 `" + character.name + "` 的 " + dmg + " 点伤害")
   if(this.hp <= 0) {
     this.hp = 0
   }
