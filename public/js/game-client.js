@@ -1,38 +1,4 @@
-$(function() {
-  var socket = io()
-  var position = null
-
-  // target
-  for(var i=-2; i<=2; i++) {
-    for(var j=-2; j<=2; j++) {
-      $("#a"+j+"b"+i).attr({x: j,y: i})
-      $("#a"+j+"b"+i).click(function() {
-        socket.emit("target", {x:position.x+Number($(this).attr("x")), y:position.y+Number($(this).attr("y"))})
-      })
-    }
-  }
-
-  // actions
-  var actionMove = $("#action-move")
-  actionMove.click(function() {
-    socket.emit("action", "move")
-  })
-  var actionAttack = $('#action-attack')
-  actionAttack.click(function() {
-    socket.emit("action", "attack")
-  })
-  $(document).keydown(function(event) {
-    switch(getKeyName(event.which)) {
-      case "A":
-        actionAttack.click()
-        break
-      case "S":
-        actionMove.click()
-        break
-    }
-  })
-
-  // socket listeners
+var gameClient = function(socket) {
   socket.on('network', function(data) {
     $('#ping').html(new Date().getTime() - data.sendTime)
     $('#online-number').html(data.onlineNumber)
@@ -100,6 +66,9 @@ $(function() {
   })
 
   socket.on('log', function(msg) {
-    console.log(msg)
+    console.log(new SimpleDate().toString())
+    var newLog = $("<p/>").html(new SimpleDate().toString() + " " + msg)
+    $("#log-list").append(newLog)
+    $("#log-area").scrollTop($("#log-list").height())
   })
-})
+}

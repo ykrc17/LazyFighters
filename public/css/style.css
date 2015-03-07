@@ -7,14 +7,13 @@ a {
   color: #00B7FF;
 }
 
-#chat-area {
-  height: 300px;
-  overflow: auto;
-  padding: 15px
-}
-
 .btn-action {
   width: 20%;
   padding-top: 20%;
   padding-bottom: 0
+}
+
+#log-area {
+  overflow: auto;
+  height: 450px
 }

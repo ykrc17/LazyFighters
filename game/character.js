@@ -80,7 +80,6 @@ Character.prototype.setStatus = function(status) {
   }
   this.status = status
   this.emit('statusChange', this.getStatusData())
-  this.emit('log', "status set to `" + status + "`")
 }
 
 Character.prototype.getProgressData = function() {

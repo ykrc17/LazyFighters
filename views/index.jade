@@ -4,20 +4,26 @@ block title
   title 懒货竞技场 | Lazy Fighters
 
 block script
+  script(src="/js/lib/simple-date.js")
   script(src='/socket.io/socket.io.js')
   script(src="/js/keyMap.js")
-  script(src='/js/game.js')
+  script(src="/js/game-client.js")
+  script(src="/js/game-map.js")
+  script(src="/js/game-action.js")
+  script(src='/js/core.js')
 
 block content
   div.container
     div.row
-      div.col-xs-4.col-sm-6
+      div.col-xs-4.col-sm-3
         include ./panels/net-panel
         include ./panels/character-panel
-        include ./panels/position-panel
         include ./panels/action-panel
         include ./panels/progress-panel
       div.col-xs-8.col-sm-6
         include ./panels/map-panel
+      div.col-xs-12.col-sm-3
+        include ./panels/position-panel
+        include ./panels/log-panel
     div
       include ./panels/instruction-panel
