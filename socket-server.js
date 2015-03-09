@@ -40,19 +40,6 @@ var socketServer = function(server) {
     })
 
     // client event
-    socket.on('disconnect', function() {
-      map.reset(player.position)
-      onlineNumber--
-      gameOn = false
-    })
-
-    socket.on('target', function(data) {
-      if(!data) {
-        console.err('invalid parameter')
-      }
-      player.setTarget(data.x, data.y)
-    })
-
     socket.on('action', function(data) {
       switch(data) {
         case "move":
@@ -64,18 +51,37 @@ var socketServer = function(server) {
       }
     })
 
+    socket.on('disconnect', function() {
+      map.reset(player.position)
+      onlineNumber--
+      gameOn = false
+    })
+
+    socket.on("client-name", function(data) {
+      player.name = data
+    })
+
+    socket.on('target', function(data) {
+      if(!data)
+        return
+      if(player.targetPosition && data.x == player.targetPosition.x && data.y == player.targetPosition.y) {
+        return
+      }
+      player.setTarget(data.x, data.y)
+    })
+
+
     // send network data
     var updateNetwork = function() {
       if(!gameOn) {
         return
       }
       data = {
-        sendTime: new Date().getTime(),
         onlineNumber: onlineNumber
       }
 
       socket.emit('network', data)
-      setTimeout(updateNetwork, 1000)
+      setTimeout(updateNetwork, 10000)
     }
     updateNetwork()
 

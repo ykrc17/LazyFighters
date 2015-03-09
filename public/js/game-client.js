@@ -1,9 +1,4 @@
 var gameClient = function(socket) {
-  socket.on('network', function(data) {
-    $('#ping').html(new Date().getTime() - data.sendTime)
-    $('#online-number').html(data.onlineNumber)
-  })
-
   socket.on('update', function(data) {
     $('#hp').html(data.hp)
 
@@ -66,7 +61,6 @@ var gameClient = function(socket) {
   })
 
   socket.on('log', function(msg) {
-    console.log(new SimpleDate().toString())
     var newLog = $("<p/>").html(new SimpleDate().toString() + " " + msg)
     $("#log-list").append(newLog)
     $("#log-area").scrollTop($("#log-list").height())
