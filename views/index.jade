@@ -4,17 +4,17 @@ block title
   title 懒货竞技场 | Lazy Fighters
 
 block script
-  script(src="/js/components.js")
+  script(src="/socket.io/socket.io.js")
+  script(src="/js/lib/register-components.js")
   script(src="/js/lib/simple-date.js")
   //- Game Import
-  script(src='/socket.io/socket.io.js')
   script(src="/js/keyMap.js")
   script(src="/js/game-client.js")
   script(src="/js/game-map.js")
   script(src="/js/game-name.js")
   script(src="/js/game-network.js")
   script(src="/js/game-action.js")
-  script(src='/js/core.js')
+  script(src="/js/core.js")
 
 block content
   div.container
