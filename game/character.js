@@ -10,11 +10,14 @@ var Position = require('./models/position')
 var CharacterAttr = require("./models/characterAttr")
 
 var Character = function(map) {
-  // private
+  // system
   this.map = map
   this.fn = []
+  this.actions = []
+  this.actions["move"] = require("./actions/move")
+  this.actions["attack"] = require("./actions/attack")
 
-  // public
+  // game
   this.position = map.generatePosition()
   map.set(this.position, this)
   this.status = "idle"
@@ -37,15 +40,12 @@ Character.prototype.emit = function(event, data) {
   this.fn[event](data)
 }
 
-Character.prototype.move = function() {
-  var Move = require("./actions/move")
-  this.action = new Move(this, constants.distance, this.targetPosition)
-  this.action.start()
-}
-
-Character.prototype.attack = function() {
-  var Attack = require("./actions/attack")
-  this.action = new Attack(this, this.attr.atkCost, this.targetPosition)
+Character.prototype.doAction = function(action) {
+  if(!this.actions[action]) {
+    this.emit("log", "没有该动作: " + action)
+    return
+  }
+  this.action = new this.actions[action](this)
   this.action.start()
 }
 

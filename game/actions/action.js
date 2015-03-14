@@ -8,15 +8,16 @@
     * progressMax
       动作最大持续时间
 */
-var Action = function(character, progressMax) {
+var Action = function(character) {
   this.character = character
-  this.progress = 0
-  this.progressMax = progressMax
   this.name = "默认动作"
+  this.progress = null
+  this.progressMax = null
 }
 
 Action.prototype.start = function() {
-
+  this.progress = 0
+  this.progressMax = 100
 }
 
 Action.prototype.update = function() {

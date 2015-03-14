@@ -41,14 +41,7 @@ var socketServer = function(server) {
 
     // client event
     socket.on('action', function(data) {
-      switch(data) {
-        case "move":
-          player.move()
-          break
-        case "attack":
-          player.attack()
-          break
-      }
+      player.doAction(data)
     })
 
     socket.on('disconnect', function() {

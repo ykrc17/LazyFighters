@@ -1,8 +1,14 @@
 var constants = require("../constants")
 var ActionTargeted = require("./action-targeted")
 
-var Move = function(character, progressMax, targetPosition) {
-  ActionTargeted.call(this, character, progressMax, targetPosition)
+/*
+  Move:
+    progressMax: distance
+    targetPosition: targetPosition
+*/
+
+var Move = function(character) {
+  ActionTargeted.call(this, character)
   this.name = "移动"
 }
 
@@ -10,6 +16,10 @@ Move.prototype = new ActionTargeted()
 Move.prototype.constructor = Move
 
 Move.prototype.start = function() {
+  this.progress = 0
+  this.progressMax = constants.distance
+  this.targetPosition = this.character.targetPosition
+
   if(!this.targetPosition) {
     this.character.emit('log', "`你` 需要一个目标")
     return
