@@ -74,7 +74,7 @@ var socketServer = function(server) {
       }
 
       socket.emit('network', data)
-      setTimeout(updateNetwork, 10000)
+      setTimeout(updateNetwork, 1000)
     }
     updateNetwork()
 

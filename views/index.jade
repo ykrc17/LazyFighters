@@ -4,9 +4,12 @@ block title
   title 懒货竞技场 | Lazy Fighters
 
 block script
+  //- Game libs
   script(src="/socket.io/socket.io.js")
   script(src="/js/lib/register-components.js")
   script(src="/js/lib/simple-date.js")
+  //- Page Navigation
+  script(src="/js/pager.js")
   //- Game Import
   script(src="/js/keyMap.js")
   script(src="/js/game-client.js")
@@ -18,9 +21,10 @@ block script
 
 block content
   div.container
+    include ./pager.jade
+  div(id="game-page").container
     div.row
       div.col-xs-4.col-sm-3
-        include ./panels/net-panel
         include ./panels/name-panel
         include ./panels/character-panel
         include ./panels/action-panel
@@ -32,3 +36,5 @@ block content
         include ./panels/log-panel
     div
       include ./panels/instruction-panel
+  div(id="network-page", style="display: none").container
+    include ./network-page/net-panel
