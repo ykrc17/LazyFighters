@@ -1,4 +1,4 @@
-var gameName = function(socket) {
+var loadName = function(socket) {
   var name = $("#name").val()
   $("#name").blur(function() {
     $("#name").val($("#name").val().substr(0, 10))

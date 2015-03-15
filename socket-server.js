@@ -83,18 +83,28 @@ var socketServer = function(server) {
       if(!gameOn) {
         return
       }
-      data = {
+
+      var timeStart = new Date().getTime()
+
+      socket.emit("characterUpdate", {
         hp: Math.floor(player.hp)
-      }
+      })
+
       if(player.status == "action") {
-        data.progress = player.getProgressData()
+        socket.emit("progressUpdate", player.getProgressData())
       }
-      socket.emit('update', data)
 
       player.update()
 
+      var timeEnd = new Date().getTime()
+
+      var delay = 1000 / constants.fps + timeStart - timeEnd
+      if(delay < 0) {
+        delay = 0
+      }
+
       if(gameOn) {
-        setTimeout(updateGame, 1000 / constants.fps)
+        setTimeout(updateGame, delay)
       }
     }
     updateGame()
