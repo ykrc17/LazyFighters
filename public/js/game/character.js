@@ -1,7 +1,4 @@
 var loadCharacter = function(socket) {
-  socket.on("characterUpdate", function(data) {
-    $('#hp').html(data.hp)
-  })
 
   socket.on('attrChange', function(data) {
     $('#hp-max').html(data.hpMax)

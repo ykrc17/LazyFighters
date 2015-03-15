@@ -10,6 +10,7 @@ $(function() {
   loadMap(socket)
   loadName(socket)
   loadProgress(socket)
+  loadUpdate(socket)
 
   // network
   loadNetwork(socket)

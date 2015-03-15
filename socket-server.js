@@ -86,13 +86,13 @@ var socketServer = function(server) {
 
       var timeStart = new Date().getTime()
 
-      socket.emit("characterUpdate", {
-        hp: Math.floor(player.hp)
-      })
-
+      var data = {}
+      data.hp = Math.floor(player.hp)
       if(player.status == "action") {
-        socket.emit("progressUpdate", player.getProgressData())
+        data.progress = player.getProgressData()
       }
+
+      socket.emit("update", data)
 
       player.update()
 
@@ -108,7 +108,6 @@ var socketServer = function(server) {
       }
     }
     updateGame()
-
   })
 }
 
