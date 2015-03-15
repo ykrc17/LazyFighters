@@ -21,7 +21,7 @@ Attack.prototype.start = function() {
   this.targetPosition = this.character.targetPosition
 
   if(!this.targetPosition) {
-    this.character.emit('log', "我需要一个目标")
+    this.character.emit("log", "我需要一个目标")
     return
   }
 
@@ -42,11 +42,11 @@ Attack.prototype.finish = function() {
   if(victim) {
     victim.damage(this.character, this.character.attr.atk)
     this.character.emit("log", "`你` 对 `" + victim.name + "` 造成 " + this.character.attr.atk + " 点伤害")
-    this.character.setStatus('idle')
+    this.character.setStatus("idle")
   }
   else {
-    this.character.emit('log', "目标地点没有人，打空了")
-    this.character.setStatus('idle')
+    this.character.emit("log", "目标地点没有人，打空了")
+    this.character.setStatus("idle")
   }
 }
 

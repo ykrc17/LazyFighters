@@ -1,5 +1,5 @@
-var app = require('./app')
-var server = require('http').createServer(app)
-var socketServer = require('./socket-server')(server)
+var app = require("./app")
+var server = require("http").createServer(app)
+var socketServer = require("./server/socket-server")(server)
 
-server.listen('8080')
+server.listen("8080")

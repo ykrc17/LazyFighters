@@ -21,7 +21,7 @@ Move.prototype.start = function() {
   this.targetPosition = this.character.targetPosition
 
   if(!this.targetPosition) {
-    this.character.emit('log', "`你` 需要一个目标")
+    this.character.emit("log", "`你` 需要一个目标")
     return
   }
   if(this.character.map.get(this.targetPosition)) {
@@ -29,7 +29,7 @@ Move.prototype.start = function() {
       this.character.emit("log", "`你` 已到达该位置")
     }
     else {
-      this.character.emit('log', "该位置已被人占领")
+      this.character.emit("log", "该位置已被人占领")
     }
     return
   }
@@ -39,11 +39,11 @@ Move.prototype.start = function() {
 Move.prototype.update = function() {
   if(this.character.map.get(this.targetPosition)) {
     this.character.setStatus("idle")
-    this.character.emit('log', "该位置已被人占领")
+    this.character.emit("log", "该位置已被人占领")
     return
   }
 
-  this.progress += this.character.attr.spd / constants.fps
+  this.progress += this.character.attr.movSpd / constants.fps
   if(this.progress >= this.progressMax) {
     this.finish();
   }
@@ -57,8 +57,8 @@ Move.prototype.finish = function() {
   this.character.map.set(this.targetPosition, this.character)
 
   this.character.setStatus("idle")
-  this.character.emit('positionChange', this.character.position.toJSON())
-  this.character.emit('log', "`你` 到达位置 " + this.character.position.toString())
+  this.character.emit("positionChange", this.character.position.toJSON())
+  this.character.emit("log", "`你` 到达位置 " + this.character.position.toString())
 }
 
 module.exports = Move

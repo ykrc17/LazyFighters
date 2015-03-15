@@ -1,5 +1,5 @@
-var constants = require('./game/constants')
-var Map = require('./game/map')
+var constants = require("./game/constants")
+var Map = require("./game/map")
 var Character = require("./game/character")
 var map = new Map(5, 5)
 var distance = 100
@@ -7,32 +7,33 @@ var distance = 100
 var onlineNumber = 0
 
 var socketServer = function(server) {
-  var io = require('socket.io')(server)
-  io.on('connection', function(socket) {
+  var io = require("socket.io")(server)
+  io.on("connection", function(socket) {
     onlineNumber++
     var player = new Character(map)
     var gameOn = true
 
-    socket.emit('attrChange', player.attr)
-    socket.emit('positionChange', player.position.toJSON())
-    socket.emit('statusChange', player.getStatusData())
+    // character init
+    socket.emit("attrChange", player.attr)
+    socket.emit("positionChange", player.position.toJSON())
+    socket.emit("statusChange", player.getStatusData())
     socket.emit("mapChange", player.getMapData())
 
     // character event
-    player.on('log', function(msg) {
-      socket.emit('log', msg)
+    player.on("log", function(msg) {
+      socket.emit("log", msg)
     })
 
-    player.on('attrChange', function(attr) {
-      socket.emit('attrChange', attr)
+    player.on("attrChange", function(attr) {
+      socket.emit("attrChange", attr)
     })
 
-    player.on('positionChange', function(position) {
-      socket.emit('positionChange', position)
+    player.on("positionChange", function(position) {
+      socket.emit("positionChange", position)
     })
 
-    player.on('statusChange', function(statusData) {
-      socket.emit('statusChange', statusData)
+    player.on("statusChange", function(statusData) {
+      socket.emit("statusChange", statusData)
     })
 
     player.on("mapChange", function(mapData) {
@@ -40,11 +41,11 @@ var socketServer = function(server) {
     })
 
     // client event
-    socket.on('action', function(data) {
+    socket.on("action", function(data) {
       player.doAction(data)
     })
 
-    socket.on('disconnect', function() {
+    socket.on("disconnect", function() {
       map.reset(player.position)
       onlineNumber--
       gameOn = false
@@ -54,7 +55,7 @@ var socketServer = function(server) {
       player.name = data
     })
 
-    socket.on('target', function(data) {
+    socket.on("target", function(data) {
       if(!data)
         return
       if(player.targetPosition && data.x == player.targetPosition.x && data.y == player.targetPosition.y) {
@@ -73,7 +74,7 @@ var socketServer = function(server) {
         onlineNumber: onlineNumber
       }
 
-      socket.emit('network', data)
+      socket.emit("network", data)
       setTimeout(updateNetwork, 1000)
     }
     updateNetwork()

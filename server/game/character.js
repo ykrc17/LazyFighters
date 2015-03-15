@@ -5,8 +5,8 @@
     map
       角色所在地图
 */
-var constants = require('./constants')
-var Position = require('./models/position')
+var constants = require("./constants")
+var Position = require("./models/position")
 var CharacterAttr = require("./models/characterAttr")
 
 var Character = function(map) {
@@ -51,13 +51,13 @@ Character.prototype.doAction = function(action) {
 
 Character.prototype.damage = function(character, dmg) {
   this.hp -= dmg
-  this.emit('log', "受到来自 `" + character.name + "` 的 " + dmg + " 点伤害")
+  this.emit("log", "受到来自 `" + character.name + "` 的 " + dmg + " 点伤害")
   if(this.hp <= 0) {
     this.hp = 0
   }
   if(this.hp == 0) {
-    this.setStatus('dead')
-    this.emit('log', "你挂了")
+    this.setStatus("dead")
+    this.emit("log", "你挂了")
   }
 }
 
@@ -70,7 +70,7 @@ Character.prototype.setTarget = function(x, y) {
   }
 
   this.targetPosition = target
-  this.emit('log', "选择 " + target.toString() + " 为目标")
+  this.emit("log", "选择 " + target.toString() + " 为目标")
   this.updateMap()
 }
 
@@ -79,7 +79,7 @@ Character.prototype.setStatus = function(status) {
     return
   }
   this.status = status
-  this.emit('statusChange', this.getStatusData())
+  this.emit("statusChange", this.getStatusData())
 }
 
 Character.prototype.getProgressData = function() {

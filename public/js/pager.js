@@ -15,6 +15,10 @@ $(function() {
     changePage("game")
   })
 
+  $("#show-character").click(function() {
+    changePage("character")
+  })
+
   $("#show-network").click(function() {
     changePage("network")
   })

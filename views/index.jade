@@ -24,6 +24,11 @@ block script
 block content
   div.container
     include ./pager.jade
-    include ./game-page/index
-    include ./network-page/index
-    include ./about-page/index
+    div(id="game-page")
+      include ./game-page/index
+    div(id="character-page", style="display: none")
+      include ./character-page/index
+    div(id="network-page", style="display: none")
+      include ./network-page/index
+    div(id="about-page", style="display: none")
+      include ./about-page/index
