@@ -22,19 +22,5 @@ block script
 block content
   div.container
     include ./pager.jade
-  div(id="game-page").container
-    div.row
-      div.col-xs-4.col-sm-3
-        include ./panels/name-panel
-        include ./panels/character-panel
-        include ./panels/action-panel
-        include ./panels/progress-panel
-      div.col-xs-8.col-sm-6
-        include ./panels/map-panel
-      div.col-xs-12.col-sm-3
-        include ./panels/position-panel
-        include ./panels/log-panel
-    div
-      include ./panels/instruction-panel
-  div(id="network-page", style="display: none").container
-    include ./network-page/net-panel
+    include ./game-page/index
+    include ./network-page/index
