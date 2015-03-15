@@ -18,4 +18,8 @@ $(function() {
   $("#show-network").click(function() {
     changePage("network")
   })
+
+  $("#show-about").click(function() {
+    changePage("about")
+  })
 })
