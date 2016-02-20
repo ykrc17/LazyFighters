@@ -5,6 +5,7 @@
     "start": "node index.js"
   },
   "repository": "https://github.com/ykrc17/LazyFighters",
+  "license": "MIT",
   "dependencies": {
     "express": "latest",
     "jade": "latest",
